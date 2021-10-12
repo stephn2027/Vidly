@@ -1,8 +1,15 @@
 import React ,{useState} from 'react';
-import Counters from './Counters';
-import '../app.css';
-import Navbar from './Navbar';
 import {v4 as uuidv4} from 'uuid';
+import { Switch , Route, Redirect } from 'react-router-dom'
+import Movies from './Movies';
+
+import Rentals from './Rentals';
+import Customers from './Customers';
+import Navbar from './Navbar';
+import '../app.css';
+import NotFound from './NotFound';
+import MovieForm from './common/MovieForm';
+import LoginForm from './common/LoginForm';
  
 export const CounterContext = React.createContext();
 
@@ -61,18 +68,25 @@ export default function App() {
     
 
     return (
-        <React.Fragment>
+        <div>
         <CounterContext.Provider value={counterContextValue}>
-          <Navbar handleNavbarDisplay={handleNavbarDisplay}/>
-        <main className="container">
-       
-           <Counters counters={counters}
+          <Navbar />
+        <main className="content">
+        <Switch>
+          <Route path="/login" component ={LoginForm}/> 
+          <Route path="/movies/:id" component ={MovieForm}/>
+          <Route path="/customers" component={Customers}/>
+          <Route path="/rentals" component={Rentals}/>
+          <Route path="/movies" component={Movies}/>
+          <Redirect from="/" exact to='/movies'/>
+          <Redirect to='/not-found' exact component={NotFound}></Redirect>
+
+        </Switch>
           
-           />
           
         </main>
         </CounterContext.Provider>
-        </React.Fragment>
+        </div>
     )
 }
 const countersList = [

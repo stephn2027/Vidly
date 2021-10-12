@@ -1,6 +1,8 @@
 import React from 'react'
 import _ from 'lodash';
 
+
+
 export default function TableBody(props) {
     const {data,columns,Id} = props;
 
@@ -18,14 +20,24 @@ export default function TableBody(props) {
          {data.map(item => (
           <tr key={item[Id]}>
             {columns.map(column=>
-            <td key={createKey(item,column)}>{renderCell(item,column)}</td>
+            
+           <td key={createKey(item,column)} > 
+          
+           
+           {renderCell(item,column) }
+           
+           </td> 
+           
+           
             )}
            
-            
+           
           </tr>
+          
          )
+         
         )}
-            
+        
         </tbody>
     );
 }

@@ -94,11 +94,12 @@ export default function Movies() {
 
   const {filteredMovies,paginatedMovies}=getPageData(); 
 
-  if (numberOfMovies === 0) return <p>No Movies Available</p>;
-
+  
+  if (numberOfMovies === 0) return <p>No Movies Available</p>
   
 
   return (
+   
     <MoviesContext.Provider value={moviesContextValue}>
       <main className="container">
         <div className="row">

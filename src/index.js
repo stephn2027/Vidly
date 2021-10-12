@@ -1,15 +1,18 @@
 import React from 'react';
 import ReactDOM from "react-dom";
-import Movies from './components/Movies';
+import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
+import App from './components/App';
 
 
 
 
 
 ReactDOM.render(
+    <BrowserRouter>
+    <App />
+    </BrowserRouter>,
     
-    <Movies/>,
     document.getElementById('root')
     );

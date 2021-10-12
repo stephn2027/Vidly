@@ -2,7 +2,7 @@ import React from 'react';
 import TableBody from './TableBody';
 import TableHeader from './TableHeader';
 
-export default function Table({columns, sortColumn, data}) {
+export default function Table({columns, sortColumn, data,}) {
 
     
     return (

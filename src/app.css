@@ -1,4 +1,14 @@
 body{
-    padding: 1rem;
+    padding: 0rem;
     margin: 0;
+
+}
+.navbar-list{
+    color: rgb(58, 57, 57);
+    text-decoration: none;
+    list-style: none;
+}
+.navbar{
+    margin-bottom: 2rem;
+    
 }
