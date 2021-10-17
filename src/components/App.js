@@ -10,6 +10,7 @@ import '../app.css';
 import NotFound from './NotFound';
 import MovieForm from './common/MovieForm';
 import LoginForm from './common/LoginForm';
+import RegisterForm from './RegisterForm';
  
 export const CounterContext = React.createContext();
 
@@ -78,6 +79,7 @@ export default function App() {
           <Route path="/customers" component={Customers}/>
           <Route path="/rentals" component={Rentals}/>
           <Route path="/movies" component={Movies}/>
+          <Route path="/register" component={RegisterForm}/>
           <Redirect from="/" exact to='/movies'/>
           <Redirect to='/not-found' exact component={NotFound}></Redirect>
 
