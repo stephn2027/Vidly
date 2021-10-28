@@ -4,15 +4,16 @@ import MoviesTable from './MoviesTable';
 import Pagination from './common/Pagination';
 import _ from 'lodash';
 import { paginate } from '../utils/paginate';
-import { getMovies } from '../services/fakeMovieService';
-import { getGenres } from '../services/fakeGenreService';
+import { getMovies , deleteMovies } from '../services/movieService';
+import { getGenres } from '../services/genreService';
 import { Link } from 'react-router-dom';
 import SearchBar from './common/SearchBar';
+import {toast} from 'react-toastify';
 
 export const MoviesContext = React.createContext();
 // const LOCAL_STORAGE_KEY = 'vidly.movies[key]';
 
-export default function Movies() {
+export default function Movies({user}) {
   const [movies, setMovies] = useState([]);
   const [pageSize, setPageCount] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,10 +28,18 @@ export default function Movies() {
   
 
   useEffect(() => {
-    const genres = [{ name: 'All Genres', _id: '' }, ...getGenres()];
-    setGenres(genres);
-    setMovies(getMovies());
+    async function fetchData(){
+      const {data} = await getGenres();
+      const genres = [{ name: 'All Genres', _id: '' }, ...data];
+      setGenres(genres);
+      const {data: movies} = await getMovies();
+      setMovies(movies);
+      
+    }
+    
+    
     setPageCount(4);
+    fetchData();
   }, []);
 
   // useEffect(() => {
@@ -46,9 +55,18 @@ export default function Movies() {
 
   const numberOfMovies = movies.length;
 
-  const handleDeleteMovie = (id) => {
-    const updatedMovies = movies.filter((movies) => movies._id !== id);
+  const handleDeleteMovie = async (id) => {
+    const originalMovies = movies;
+    const updatedMovies = originalMovies.filter((movies) => movies._id !== id);
     setMovies(updatedMovies);
+    try {
+      await deleteMovies(id);
+    } catch (error) {
+      if(error.response && error.response.status === 404)
+      toast.error("This movie has already been deleted");
+      setMovies(originalMovies);
+    }
+    
   };
 
   const handleLike = (movie) => {
@@ -67,8 +85,10 @@ export default function Movies() {
   };
 
   const handleGenreSelect = (genre) => {
+    if(searchQuery===query)return;
     setSelectedGenre(genre);
     setCurrentPage(1);
+    setSearchQuery("");
   };
 
   const handleSort = (sortPath) => {
@@ -82,18 +102,41 @@ export default function Movies() {
     handleAdd,
     handleSort,
     handleGenreSelect,
+    
   };
+  function handleOnChange(query){
+    setSearchQuery(query);
+    setCurrentPage(1);
+    setSelectedGenre(null)
+  }
+  function handleSearch(movies,searchQuery){
+   
+    if(!searchQuery)return movies;
+    
+    return movies.filter(movie=>{
+      
+      const movieName = movie.title.toLowerCase();
+      
+      
+      return movieName.includes(searchQuery);
+     
+    
+  
+   })
+   
+  }
   const searchedData = handleSearch(movies,searchQuery);
   const getPageData = () => {
     const filteredMovies =
       selectedGenre && selectedGenre._id
-        ? movies.filter((m) => m.genre._id === selectedGenre._id)
+        ? movies.filter((m) => m.genre._id === selectedGenre._id) 
         : searchedData;
 
     const sortedMovies = _.orderBy(
       filteredMovies,
       [sortColumn.path],
       [sortColumn.order]
+      
     );
 
     const paginatedMovies = paginate(sortedMovies, currentPage, pageSize);
@@ -105,25 +148,13 @@ export default function Movies() {
     return { filteredMovies, paginatedMovies, searchedData };
   };
 
-  function handleSearch(movies,searchQuery){
-    if(!searchQuery)return movies;
-
-    return movies.filter(movie=>{
-      const movieName = movie.title.toLowerCase();
-      return movieName.includes(searchQuery);
-    })
   
-    
-  
-   };
-  
-
   const { filteredMovies, paginatedMovies } = getPageData();
 
   if (numberOfMovies === 0)
     return (
       <div className="container-fluid">
-        {
+        {user&&
           <Link
             to="/movies/new"
             className="btn btn-primary"
@@ -145,12 +176,13 @@ export default function Movies() {
               genres={genres}
               handleGenreSelect={handleGenreSelect}
               selectedGenre={selectedGenre}
+              searchQuery={searchQuery}
             />
           </div>
 
           <div className="col">
             <div className="container-fluid m-2">
-              {
+              {user&&
                 <Link
                   to="/movies/new"
                   className="btn btn-primary"
@@ -161,7 +193,8 @@ export default function Movies() {
               }
               <SearchBar
                 searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
+                onChange={handleOnChange}
+                
               />
             </div>
             Showing &nbsp;

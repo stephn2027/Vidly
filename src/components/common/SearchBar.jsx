@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function SearchBar({searchQuery,setSearchQuery}) {
+export default function SearchBar({searchQuery,onChange}) {
   return (
     <form className="d-flex" 
     onSubmit={(e) => e.preventDefault()}
@@ -13,7 +13,7 @@ export default function SearchBar({searchQuery,setSearchQuery}) {
         placeholder="Search"
         aria-label="Search"
         value={searchQuery}
-        onChange={e=>setSearchQuery(e.target.value)}
+        onChange={e=>onChange(e.target.value)}
       />
       <button className="btn btn-outline-primary" type="submit">
         Search

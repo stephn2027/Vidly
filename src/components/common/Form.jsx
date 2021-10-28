@@ -29,7 +29,7 @@ export default class Form extends Component {
 
     this.setState({ errors: errors || {} });
     if (errors) return;
-
+    
     this.doSubmit();
   };
 
@@ -65,6 +65,7 @@ export default class Form extends Component {
       label={label}
       onChange={this.handleChange}
       error={errors[name]}
+
     />
      );
     }
