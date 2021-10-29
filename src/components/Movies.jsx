@@ -151,21 +151,21 @@ export default function Movies({user}) {
   
   const { filteredMovies, paginatedMovies } = getPageData();
 
-  if (numberOfMovies === 0)
-    return (
-      <div className="container-fluid">
-        {user&&
-          <Link
-            to="/movies/new"
-            className="btn btn-primary"
-            style={{ marginBottom: 20 }}
-          >
-            New Movie
-          </Link>
-        }
-        <p>No Movies Available</p>
-      </div>
-    );
+  // if (numberOfMovies === 0)
+  //   return (
+  //     <div className="container-fluid">
+  //       {user&&
+  //         <Link
+  //           to="/movies/new"
+  //           className="btn btn-primary"
+  //           style={{ marginBottom: 20 }}
+  //         >
+  //           New Movie
+  //         </Link>
+  //       }
+  //       <p>No Movies Available</p>
+  //     </div>
+  //   );
 
   return (
     <MoviesContext.Provider value={moviesContextValue}>
