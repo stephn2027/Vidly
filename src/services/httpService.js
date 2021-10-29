@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 //bi directional dependencies if auth and http are depending on each to pass data. there should be one higher level heirarchy between the two. in this case, it's our http.
 
-axios.defaults.baseURL=process.env.ReaREACT_APP_API_URL;
+axios.defaults.baseURL=process.env.REACT_APP_API_URL;
 
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
