@@ -53,7 +53,7 @@ export default function Movies({user}) {
   //   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(movies));
   // }, [movies]);
 
-  const numberOfMovies = movies.length;
+  
 
   const handleDeleteMovie = async (id) => {
     const originalMovies = movies;
