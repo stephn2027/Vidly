@@ -29,8 +29,8 @@ export default function Movies({user}) {
 
   useEffect(() => {
     async function fetchData(){
-      const {data} = await getGenres();
-      const genres = [{ name: 'All Genres', _id: '' }, ...data];
+      const {data:genresRaw} = await getGenres();
+      const genres = [{ name: 'All Genres', _id: '' }, ...genresRaw];
       setGenres(genres);
       const {data: movies} = await getMovies();
       setMovies(movies);
@@ -176,7 +176,7 @@ export default function Movies({user}) {
               genres={genres}
               handleGenreSelect={handleGenreSelect}
               selectedGenre={selectedGenre}
-              searchQuery={searchQuery}
+              
             />
           </div>
 

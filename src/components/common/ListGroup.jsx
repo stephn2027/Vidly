@@ -2,7 +2,7 @@ import React from 'react';
 
 
 export default function ListGroup(props) {
-  const {handleGenreSelect,genres,selectedGenre,valueProperty,textProperty,searchQuery} = props
+  const {handleGenreSelect,genres,selectedGenre,valueProperty,textProperty} = props
     
 
   return (
