@@ -4,16 +4,16 @@ import MoviesTable from './MoviesTable';
 import Pagination from './common/Pagination';
 import _ from 'lodash';
 import { paginate } from '../utils/paginate';
-import { getMovies , deleteMovies } from '../services/movieService';
+import { getMovies, deleteMovies } from '../services/movieService';
 import { getGenres } from '../services/genreService';
 import { Link } from 'react-router-dom';
 import SearchBar from './common/SearchBar';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 export const MoviesContext = React.createContext();
 // const LOCAL_STORAGE_KEY = 'vidly.movies[key]';
 
-export default function Movies({user}) {
+export default function Movies({ user }) {
   const [movies, setMovies] = useState([]);
   const [pageSize, setPageCount] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,19 +25,16 @@ export default function Movies({user}) {
   const { search } = window.location;
   const query = new URLSearchParams(search).get('search');
   const [searchQuery, setSearchQuery] = useState(query || '');
-  
 
   useEffect(() => {
-    async function fetchData(){
-      const {data:genresRaw} = await getGenres();
-      const genres = [{ name: 'All Genres', _id: '' }, ...genresRaw];
+    async function fetchData() {
+      const { data } = await getGenres();
+      const genres = [{ name: 'All Genres', _id: '' }, ...data];
       setGenres(genres);
-      const {data: movies} = await getMovies();
+      const { data: movies } = await getMovies();
       setMovies(movies);
-      
     }
-    
-    
+
     setPageCount(4);
     fetchData();
   }, []);
@@ -53,7 +50,7 @@ export default function Movies({user}) {
   //   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(movies));
   // }, [movies]);
 
-  
+  const numberOfMovies = movies.length;
 
   const handleDeleteMovie = async (id) => {
     const originalMovies = movies;
@@ -62,11 +59,10 @@ export default function Movies({user}) {
     try {
       await deleteMovies(id);
     } catch (error) {
-      if(error.response && error.response.status === 404)
-      toast.error("This movie has already been deleted");
+      if (error.response && error.response.status === 404)
+        toast.error('This movie has already been deleted');
       setMovies(originalMovies);
     }
-    
   };
 
   const handleLike = (movie) => {
@@ -85,10 +81,10 @@ export default function Movies({user}) {
   };
 
   const handleGenreSelect = (genre) => {
-    if(searchQuery===query)return;
+    if (searchQuery === query) return;
     setSelectedGenre(genre);
     setCurrentPage(1);
-    setSearchQuery("");
+    setSearchQuery('');
   };
 
   const handleSort = (sortPath) => {
@@ -102,59 +98,45 @@ export default function Movies({user}) {
     handleAdd,
     handleSort,
     handleGenreSelect,
-    
   };
-  function handleOnChange(query){
+  function handleOnChange(query) {
     setSearchQuery(query);
     setCurrentPage(1);
-    setSelectedGenre(null)
+    setSelectedGenre(null);
   }
-  function handleSearch(movies,searchQuery){
-   
-    if(!searchQuery)return movies;
-    
-    return movies.filter(movie=>{
-      
+  function handleSearch(movies, searchQuery) {
+    if (!searchQuery) return movies;
+
+    return movies.filter((movie) => {
       const movieName = movie.title.toLowerCase();
-      
-      
+
       return movieName.includes(searchQuery);
-     
-    
-  
-   })
-   
+    });
   }
-  const searchedData = handleSearch(movies,searchQuery);
+  const searchedData = handleSearch(movies, searchQuery);
   const getPageData = () => {
     const filteredMovies =
       selectedGenre && selectedGenre._id
-        ? movies.filter((m) => m.genre._id === selectedGenre._id) 
+        ? movies.filter((m) => m.genre._id === selectedGenre._id)
         : searchedData;
 
     const sortedMovies = _.orderBy(
       filteredMovies,
       [sortColumn.path],
       [sortColumn.order]
-      
     );
 
     const paginatedMovies = paginate(sortedMovies, currentPage, pageSize);
-   
-
-    
- 
 
     return { filteredMovies, paginatedMovies, searchedData };
   };
 
-  
   const { filteredMovies, paginatedMovies } = getPageData();
 
   // if (numberOfMovies === 0)
   //   return (
   //     <div className="container-fluid">
-  //       {user&&
+  //       {user && (
   //         <Link
   //           to="/movies/new"
   //           className="btn btn-primary"
@@ -162,7 +144,7 @@ export default function Movies({user}) {
   //         >
   //           New Movie
   //         </Link>
-  //       }
+  //       )}
   //       <p>No Movies Available</p>
   //     </div>
   //   );
@@ -176,26 +158,22 @@ export default function Movies({user}) {
               genres={genres}
               handleGenreSelect={handleGenreSelect}
               selectedGenre={selectedGenre}
-              
             />
           </div>
 
           <div className="col">
             <div className="container-fluid m-2">
-              {user&&
-                <Link
-                  to="/movies/new"
-                  className="btn btn-primary"
-                  style={{ marginBottom: 10, padding:0 }}
-                ><button className="btn btn-primary">Add New Movie</button>
-                  
+              {user && (
+                <Link to="/movies/new">
+                  <button
+                    className="btn btn-primary"
+                    style={{ marginBottom: 20 }}
+                  >
+                    Add Movie
+                  </button>
                 </Link>
-              }
-              <SearchBar
-                searchQuery={searchQuery}
-                onChange={handleOnChange}
-                
-              />
+              )}
+              <SearchBar searchQuery={searchQuery} onChange={handleOnChange} />
             </div>
             Showing &nbsp;
             <span style={{ color: 'red', fontWeight: 'bold' }}>
@@ -205,7 +183,7 @@ export default function Movies({user}) {
             <MoviesTable
               movies={movies}
               handleSort={handleSort}
-              paginatedMovies={searchQuery?searchedData:paginatedMovies}
+              paginatedMovies={searchQuery ? searchedData : paginatedMovies}
               handleLike={handleLike}
               handleDeleteMovie={handleDeleteMovie}
               sortColumn={sortColumn}
