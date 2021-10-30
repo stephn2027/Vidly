@@ -186,9 +186,9 @@ export default function Movies({user}) {
                 <Link
                   to="/movies/new"
                   className="btn btn-primary"
-                  style={{ marginBottom: 20 }}
-                >
-                  Add
+                  style={{ marginBottom: 10, padding:0 }}
+                ><button className="btn btn-primary">Add New Movie</button>
+                  
                 </Link>
               }
               <SearchBar
